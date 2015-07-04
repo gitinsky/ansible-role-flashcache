@@ -1,0 +1,12 @@
+# flashcache - flashcache enabler
+#
+
+description     "Reenable writeback cached drives"
+
+start on starting mountall
+
+task
+
+script
+    /sbin/flashcache_load /dev/sda2
+end script

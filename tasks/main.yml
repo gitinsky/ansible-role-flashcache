@@ -1,0 +1,21 @@
+---
+- name: install dkms
+  apt: name=dkms state=present
+
+- name: install build-essential
+  apt: name=build-essential state=present
+
+#- name: install kernel headers
+#  command: bash -c "apt-get install linux-headers-$(uname -r)"
+
+- name: checkout flashcache
+  git: repo=https://github.com/facebook/flashcache.git version=3.1.2 dest=/root/flashcache accept_hostkey=yes
+
+- name: build flashcache
+  command: bash -c "cd /root/flashcache && make -f Makefile.dkms" creates=/sbin/flashcache_create
+
+- name: put flashcache init file
+  template: src=init dest=/etc/init/flashcache.conf owner=root group=root mode=0644
+
+#- name: put LVM config file w/masked MD array
+#  template: src=flashcache/lvm.conf dest=/etc/lvm/lvm.conf owner=root group=root mode=0644
